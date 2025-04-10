@@ -1,78 +1,63 @@
-clc;
-close all;
-clear all;
+clc(); close("all"); clear();
 
+c = 3e8; % speed of light
 
-f = 130e9;
-c = 3e8; %speed of light
-control_packet_size = 25 * 8;  % bits
-data_packet_size    = 64000 * 8;
+% Parameters
+beamwidth = [0.1, 3, 12];
 
-d = 9.5:1:18; % radius of room -> 18 meters
-tprop = d./c; %propagation delay across different distances.
+d = 9.5 : 18; % radius of room -> 18 meters
 
-tpropmax = max(tprop);
+controlPacketSize = 25 * 8; % bits
+dataPacketSize    = 64000 * 8;
 
-data_rates = [157.4, 210.2, 315.4]  .* 1e9;
+dataRates = [157.4, 210.2, 315.4] * 1e9;
 
-min_data_rate = min(data_rates);
-avg_data_rate = mean(data_rates);
+nNodes = 50;
+nSectors = 360 ./ beamwidth;
 
-T_cts = control_packet_size / min_data_rate;
+interArrivalTimeList = (150 : 50 : 1000) * 1e-6;
+
+lambda_a = 0.05;
+r = 18;
+gamma_tx = 1;
+
+T_prop = d / c; % propagation delay across different distances.
+T_cts = controlPacketSize / min(dataRates);
 T_ack = T_cts;
 T_cta = T_cts;
 T_rts = T_cts;
 T_bo_max = 10e-9;
+T_data = dataPacketSize / mean(dataRates);
+T_tx = T_cts + T_data + T_ack + 2 * mean(T_prop);
+T_wait = 2 * T_cts +  T_bo_max  + 2 * max(T_prop);
 
-T_data = data_packet_size / avg_data_rate;
+beamwidth_rad = deg2rad(beamwidth);
+lengthsub = r ./ tan(pi / 2 - beamwidth_rad / 2);
+area_t = 0.5 * 2 * lengthsub * r;
 
-T_tx = T_cts + T_data + T_ack + 2*(mean(tprop));
-T_wait = 2*(control_packet_size / min_data_rate) +  T_bo_max  + 2*tpropmax;
+pdf_activity = zeros(numel(beamwidth_rad), numel(interArrivalTimeList));
 
-inter_arrival_time_list = (150:50:1000) .* 1e-6 ;
-beam_width = [0.1 3 12];
-
-S_Results = [];
-N_sec = 360 ./beam_width;
-
-Nnodes = 50;
-
-t_cycle_max = N_sec*T_wait + (Nnodes*T_tx);
-t = 1e-9:1e-7:t_cycle_max;
-
-lambda_a = 0.05;
-r = 18;
-beam_width_rad = deg2rad(beam_width);
-lengthsub          = r ./ tan((pi/2) - (beam_width_rad./2));
-area_t     = 0.5 .* 2.*lengthsub .* r;
-
-gamma_tx = 1;
-
-pdf_activity = zeros(length(beam_width_rad), length(inter_arrival_time_list));
-
-for bw = 1:length(beam_width_rad)
-    for k = 1:length(inter_arrival_time_list)
-        T_ia = inter_arrival_time_list(k);
-        lambda_ = 1./T_ia; % packet rate
-        p = (N_sec(bw).*(T_wait + 2e-6 )) ./ ((T_ia - (Nnodes*T_tx))); % System load.
+for i = 1 : numel(beamwidth_rad)
+    for j = 1 : numel(interArrivalTimeList)
+        T_ia = interArrivalTimeList(j);
+        p = nSectors(i) .* (T_wait + 2e-6) ./ (T_ia - (nNodes * T_tx)); % System load.
         sum_tx = 0;
-        for n = 0:1:Nnodes
-            temp  = ((lambda_a.*area_t(bw)).^(n) .* (exp(-1.*lambda_a.*area_t(bw)))) ./ (factorial(n));
-            temp2 = 1 - (1-p)^(gamma_tx*n);
-            sum_tx = sum_tx + (temp*temp2);
+        for k = 0 : 1 : nNodes
+            temp  = (lambda_a * area_t(i)) .^ k .* exp(-lambda_a * area_t(i)) ./ factorial(k);
+            temp2 = 1 - (1 - p) ^ (gamma_tx * k);
+            sum_tx = sum_tx + temp * temp2;
         end
-        pdf_activity(bw,k) = sum_tx * (1-exp(-1*(lambda_a*area_t(bw))));
+        pdf_activity(i, j) = sum_tx * (1 - exp(-lambda_a * area_t(i)));
     end
 end
-pdf_activity =pdf_activity';
-figure;
-x = inter_arrival_time_list * 1e6;
-plot(x, pdf_activity(:,1));
-hold on
-plot(x, pdf_activity(:,2));
-hold on
-plot(x, pdf_activity(:,3));
-legend("0.1\circ","3\circ","12\circ");
-grid on;
+
+x = interArrivalTimeList * 1e6;
+pdf_activity = pdf_activity.';
+
+figure();
+plot(x, pdf_activity(:, 1)); hold("on");
+plot(x, pdf_activity(:, 2));
+plot(x, pdf_activity(:, 3)); grid("on");
 xlabel("Inter-Arrival Time [\mus]");
-ylabel("Probability Of Uplink Transmission")
+ylabel("Probability Of Uplink Transmission");
+legend("0.1\circ", "3\circ", "12\circ");
