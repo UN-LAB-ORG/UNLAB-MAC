@@ -6,7 +6,7 @@ f = 130e9;
 lambda = 3e8 / f;
 c = 3e8;
 
-control_packet_size = 25 * 8; 
+control_packet_size = 25 * 8;
 data_packet_size    = 64000 * 8;
 
 d = 1:1:18;
@@ -36,23 +36,23 @@ N_sec = 30;
 for k = 1:length(T_total)
     T_ia = T_total(k);
     lambda_ = 1./T_ia;
-    
+
     Nnodes = 30;
     t_cycle_max = N_sec*T_wait + (Nnodes*T_tx);
     t_cycle_min = N_sec*T_wait ;
     p = (N_sec*T_wait) / ((T_ia - (Nnodes*T_tx)));
-    
+
     n = 0:1:Nnodes;
     t = 0:1e-7:t_cycle_max;
     % t = t(2:end);
     P_n = zeros(1,length(n));
-    
+
     f_T_cycle  = zeros(1,length(t));
     f_T_face   = zeros(1,length(t));
     f_T_wait   = zeros(1,length(t));
     f_T_sector = zeros(1,length(t));
     f_T_success  = zeros(1,length(t));
-    
+
     for i = 1:length(n)
         combv =  nchoosek(Nnodes,n(i));
         t_1 = ((1-p)^(Nnodes-n(i))) * p^(n(i));
@@ -81,7 +81,7 @@ return;
 
     big_k = 10;
     P_b = 0.05;
-    
+
     for small_k = 1:big_k
         scale_constant = (1/small_k) * (1-P_b) * P_b^(small_k-1);
         f_T_success = f_T_success + (scale_constant .* f_T_face);
@@ -91,13 +91,13 @@ return;
        figure;
     plot(t,f_T_face);
 return;
-    
-    
-    %% T - Wait Time: 
+
+
+    %% T - Wait Time:
     f_T_wait(1) = (1-p);
     f_T_wait    = f_T_wait + (f_T_cycle.*p);
     f_T_wait    = f_T_wait ./ sum(f_T_wait);
-    
+
     %% T - Sector Time
     distance_MCS     = [18, 17.6, 9.5];
     data_rate_MCS    = [157.4, 210.2, 315.4] .* 1e9;
@@ -109,21 +109,21 @@ return;
         idx2 = findClosestIndex(t , arg);
         f_T_sector(1,idx2) = MCS_P_m;
     end
-    
+
     f_T_sector  = f_T_sector ./ sum(f_T_sector);
     % f_T_face   = f_T_face(1,:);% ./ sum(f_T_face(1,:));
     % f_T_wait   = f_T_face(1,:);% ./ sum(f_T_wait(1,:));
     % f_T_sector = f_T_face(1,:);% ./ sum(f_T_sector(1,:));
-    
-    
+
+
     f_t_conv = conv(f_T_face, f_T_wait);
     f_t_conv = f_t_conv ./ sum(f_t_conv);
     f_t_conv = conv(f_t_conv,f_T_sector);
     f_t_conv = f_t_conv ./ sum(f_t_conv);
-    
+
 %     figure;
 %     plot(f_t_conv);
-    
+
     S=0;
     t(1) = 1.00000000000000e-09;
     f_t_conv(1) = 0;

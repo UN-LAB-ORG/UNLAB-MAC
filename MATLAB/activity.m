@@ -6,10 +6,10 @@ clear all;
 f = 130e9;
 c = 3e8; %speed of light
 control_packet_size = 25 * 8;  % bits
-data_packet_size    = 64000 * 8; 
+data_packet_size    = 64000 * 8;
 
-d = 9.5:1:18; % radius of room -> 18 meters 
-tprop = d./c; %propagation delay across different distances. 
+d = 9.5:1:18; % radius of room -> 18 meters
+tprop = d./c; %propagation delay across different distances.
 
 tpropmax = max(tprop);
 
@@ -29,7 +29,7 @@ T_data = data_packet_size / avg_data_rate;
 T_tx = T_cts + T_data + T_ack + 2*(mean(tprop));
 T_wait = 2*(control_packet_size / min_data_rate) +  T_bo_max  + 2*tpropmax;
 
-inter_arrival_time_list = (150:50:1000) .* 1e-6 ; 
+inter_arrival_time_list = (150:50:1000) .* 1e-6 ;
 beam_width = [0.1 3 12];
 
 S_Results = [];
@@ -58,7 +58,7 @@ for bw = 1:length(beam_width_rad)
         sum_tx = 0;
         for n = 0:1:Nnodes
             temp  = ((lambda_a.*area_t(bw)).^(n) .* (exp(-1.*lambda_a.*area_t(bw)))) ./ (factorial(n));
-            temp2 = 1 - (1-p)^(gamma_tx*n); 
+            temp2 = 1 - (1-p)^(gamma_tx*n);
             sum_tx = sum_tx + (temp*temp2);
         end
         pdf_activity(bw,k) = sum_tx * (1-exp(-1*(lambda_a*area_t(bw))));

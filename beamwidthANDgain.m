@@ -11,7 +11,7 @@ diameter = (1.22 * lambda) ./beamwidth;
 w_0 = diameter./2;
 z_r = (pi.*(w_0).^2) ./ lambda;
 
-max_Distance = [1;5;10;15;20]; 
+max_Distance = [1;5;10;15;20];
 w_z = w_0 .* sqrt(1 + (max_Distance./z_r).^2);
 
 figure;

@@ -29,6 +29,3 @@ legend("0.1\circ","3\circ","12\circ");
 grid on;
 xlabel("Number of Nodes");
 ylabel("PDF")
-
-
-

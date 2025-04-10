@@ -1,69 +1,76 @@
 from Objects import mirror
 
 
-global_theta_shift = 0 #0.08
+global_theta_shift = 0  # 0.08
 global_mirror_length = 0.7
-global_mirror_map  = {}
+global_mirror_map = {}
 deltaTheta = 1
-global_sector_table       = [26,27,28,29,0,1,2,3]
-global_theta_support_26   = [x for x in range(0,65,deltaTheta)]
-global_theta_support_27   = [x for x in range(0,60,deltaTheta)]
-global_theta_support_28   = [x for x in range(0,53,deltaTheta)] + [x for x in range(147,178,deltaTheta)]
-global_theta_support_29   = [x for x in range(0,47,deltaTheta)] + [x for x in range(140,178,deltaTheta)]
-global_theta_support_0    = [x for x in range(0,37,deltaTheta)] + [x for x in range(137,177,deltaTheta)]
-#[115,120,125,130,135,140,143,145,150,155,160,163,165,170,175,178,0,3,5,8,10,15,18,20,25,30,35,40,45,50,55,60,65,70,75,80,85]
-global_theta_support_1    = [x for x in range(0,31, deltaTheta)] + [x for x in range(132,177,deltaTheta)]
-global_theta_support_2    = [x for x in range(0,21, deltaTheta)] + [x for x in range(127,177,deltaTheta)]
-global_theta_support_3    = [x for x in range(0,6,deltaTheta)] + [x for x in range(119,177,deltaTheta)]
-global_theta_support      = {
-                            26: global_theta_support_26,
-                            27: global_theta_support_27,
-                            28: global_theta_support_28,
-                            29: global_theta_support_29,
-                            0: global_theta_support_0,
-                            1: global_theta_support_1,
-                            2: global_theta_support_2,
-                            3: global_theta_support_3
-                            }
-global_y_support          = {
-                                26: [17-(0.3*i) for i in range(0,len(global_theta_support[26]))],   # in the vertical wall, the x will represent the differnt mirror rows 
-                                27 :[17-(0.3*i) for i in range(0,len(global_theta_support[27]))],
-                                28 :[17-(0.3*i) for i in range(0,len(global_theta_support[28]))],
-                                29 :[17-(0.3*i) for i in range(0,len(global_theta_support[29]))],
-                                0 : [17-(0.3*i) for i in range(0,len(global_theta_support[0]))],
-                                1 : [17-(0.3*i) for i in range(0,len(global_theta_support[1]))],
-                                2 : [17-(0.3*i) for i in range(0,len(global_theta_support[2]))],
-                                3 : [17-(0.3*i) for i in range(0,len(global_theta_support[3]))]
-                            }
-global_first_start        = -51.5
-global_sector_size        = 17.5
-global_mirror_seperation  = 1.5 # seperation on the same row 
+global_sector_table = [26, 27, 28, 29, 0, 1, 2, 3]
+global_theta_support_26 = [x for x in range(0, 65, deltaTheta)]
+global_theta_support_27 = [x for x in range(0, 60, deltaTheta)]
+global_theta_support_28 = [x for x in range(0, 53, deltaTheta)] + [x for x in range(147, 178, deltaTheta)]
+global_theta_support_29 = [x for x in range(0, 47, deltaTheta)] + [x for x in range(140, 178, deltaTheta)]
+global_theta_support_0 = [x for x in range(0, 37, deltaTheta)] + [x for x in range(137, 177, deltaTheta)]
+# [115,120,125,130,135,140,143,145,150,155,160,163,165,170,175,178,0,3,5,8,10,15,18,20,25,30,35,40,45,50,55,60,65,70,75,80,85]
+global_theta_support_1 = [x for x in range(0, 31, deltaTheta)] + [x for x in range(132, 177, deltaTheta)]
+global_theta_support_2 = [x for x in range(0, 21, deltaTheta)] + [x for x in range(127, 177, deltaTheta)]
+global_theta_support_3 = [x for x in range(0, 6, deltaTheta)] + [x for x in range(119, 177, deltaTheta)]
+global_theta_support = {
+    26: global_theta_support_26,
+    27: global_theta_support_27,
+    28: global_theta_support_28,
+    29: global_theta_support_29,
+    0: global_theta_support_0,
+    1: global_theta_support_1,
+    2: global_theta_support_2,
+    3: global_theta_support_3,
+}
+global_y_support = {
+    26: [
+        17 - (0.3 * i) for i in range(0, len(global_theta_support[26]))
+    ],  # in the vertical wall, the x will represent the differnt mirror rows
+    27: [17 - (0.3 * i) for i in range(0, len(global_theta_support[27]))],
+    28: [17 - (0.3 * i) for i in range(0, len(global_theta_support[28]))],
+    29: [17 - (0.3 * i) for i in range(0, len(global_theta_support[29]))],
+    0: [17 - (0.3 * i) for i in range(0, len(global_theta_support[0]))],
+    1: [17 - (0.3 * i) for i in range(0, len(global_theta_support[1]))],
+    2: [17 - (0.3 * i) for i in range(0, len(global_theta_support[2]))],
+    3: [17 - (0.3 * i) for i in range(0, len(global_theta_support[3]))],
+}
+global_first_start = -51.5
+global_sector_size = 17.5
+global_mirror_seperation = 1.5  # seperation on the same row
 global_adjustment_value = 1.5
 # global_sector_start_table = [-60,-41,-24 ,-11,0 ,11,23,40]
 # global_sector_end_table   = [-43,-25,-11 , 0 ,11,23,39,58]
 
-global_sector_start_table = [-17,-11,-7 ,-3,0 ,3,7.5,12.5]
-global_sector_end_table   = [-12,-7,-3., 0,3,7,12,16]
+global_sector_start_table = [-17, -11, -7, -3, 0, 3, 7.5, 12.5]
+global_sector_end_table = [-12, -7, -3.0, 0, 3, 7, 12, 16]
+
 
 def setup_vertical_mirror_upperh():
-    global_mirror_map  = {}
-    for current_sector_indexer , current_sector in enumerate(global_sector_table):
+    global_mirror_map = {}
+    for current_sector_indexer, current_sector in enumerate(global_sector_table):
         mirrors_in_current_sector = []
         last_coordinate_computed = global_sector_end_table[current_sector_indexer]
         local_indexer = global_sector_start_table[current_sector_indexer]
         local_theta_support = global_theta_support[current_sector]
-        for mirror_index in range(0,len(local_theta_support)):
-            center_point = (global_sector_start_table[current_sector_indexer] + global_sector_end_table[current_sector_indexer]) / 2
-            length   = abs(global_sector_end_table[current_sector_indexer] - global_sector_start_table[current_sector_indexer]) * 0.8
-            mirrors_in_current_sector.append(mirror.mirror(length, 
-                                                               local_theta_support[mirror_index],
-                                                               center_point, 
-                                                               17 
-                                                                ))
-                
+        for mirror_index in range(0, len(local_theta_support)):
+            center_point = (
+                global_sector_start_table[current_sector_indexer] + global_sector_end_table[current_sector_indexer]
+            ) / 2
+            length = (
+                abs(
+                    global_sector_end_table[current_sector_indexer] - global_sector_start_table[current_sector_indexer]
+                )
+                * 0.8
+            )
+            mirrors_in_current_sector.append(
+                mirror.mirror(length, local_theta_support[mirror_index], center_point, 17)
+            )
+
         global_mirror_map[current_sector] = mirrors_in_current_sector
     return global_mirror_map
-
 
 
 # def setup_vertical_mirror_upperh():
@@ -75,24 +82,19 @@ def setup_vertical_mirror_upperh():
 #         local_theta_support = global_theta_support[current_sector]
 #         while local_indexer < last_coordinate_computed:
 #             for mirror_index in range(0,len(local_theta_support)):
-#                 mirrors_in_current_sector.append(mirror.mirror(global_mirror_length, 
+#                 mirrors_in_current_sector.append(mirror.mirror(global_mirror_length,
 #                                                                local_theta_support[mirror_index],
-#                                                                local_indexer, 
-#                                                                global_y_support[current_sector][mirror_index]  
+#                                                                local_indexer,
+#                                                                global_y_support[current_sector][mirror_index]
 #                                                                 ))
-                
+
 #                 local_theta_support[mirror_index] += global_theta_shift
 #             local_indexer += global_mirror_seperation
 #         global_mirror_map[current_sector] = mirrors_in_current_sector
 #     return global_mirror_map
 
 
-
-
-
-
-
-# #Sector -> 
+# #Sector ->
 # mirrors = [
 #     mirror.mirror(0.5, 20.4 , -59.0, 59.0),
 #     mirror.mirror(0.5, 30  , -59.0, 58.7),
@@ -100,7 +102,7 @@ def setup_vertical_mirror_upperh():
 #     mirror.mirror(0.5, 50, -59.0, 58.1),
 #     mirror.mirror(0.5, 60, -59.0, 57.8),
 # ]
-# counter_limit = 0 
+# counter_limit = 0
 # theta_1 = 20.4
 # theta_2 = 30
 # theta_3 = 40
@@ -125,7 +127,7 @@ def setup_vertical_mirror_upperh():
 
 # mirrors_final += (mirrors)
 
-# #sector -> 
+# #sector ->
 # mirrors = [
 #     mirror.mirror(0.5, 170 , -42.0, 59.0),
 #     mirror.mirror(0.5, 0  ,  -42.0, 58.7),
@@ -171,7 +173,7 @@ def setup_vertical_mirror_upperh():
 
 # mirrors_final+=(mirrors)
 
-# # # sector -> 
+# # # sector ->
 # xCor = -25
 # mirrors = [
 #     mirror.mirror(0.5, 150 ,  xCor, 59.0),
@@ -221,7 +223,7 @@ def setup_vertical_mirror_upperh():
 
 # mirrors_final+=(mirrors)
 
-# # # sector -> 
+# # # sector ->
 # xCor = -12
 # mirrors = [
 #     mirror.mirror(0.5, 150 ,  xCor, 59.0),
@@ -270,11 +272,9 @@ def setup_vertical_mirror_upperh():
 #     mirrors.append(mirror.mirror(0.5, theta_9, x_last,56.6))
 
 
-
-
 # mirrors_final+=(mirrors)
 
-# # # sector -> 0 
+# # # sector -> 0
 # xCor = 0
 # mirrors = [
 #     mirror.mirror(0.5, 150 ,  xCor, 59.0),
@@ -423,8 +423,6 @@ def setup_vertical_mirror_upperh():
 #     mirrors.append(mirror.mirror(0.5, theta_7, x_last,57.2))
 #     mirrors.append(mirror.mirror(0.5, theta_8, x_last,56.9))
 #     mirrors.append(mirror.mirror(0.5, theta_9, x_last,56.6))
-
-
 
 
 # mirrors_final+=(mirrors)
